@@ -26,7 +26,9 @@ app.use(express.json());
 //MiddleWare
 
 function AuthenToken(req,res,next){
-    const authorizationHeader=req.header('authorization');
+    console.log(next);
+    const authorizationHeader = req.headers['authorization'];
+
     const token= authorizationHeader.split(' ')[1];
     if(!token) res.sendStatus(404);
     jwt.verify(token,process.env.ACCESS_TOKEN_SECREET,(err,data)=>{
@@ -35,16 +37,6 @@ function AuthenToken(req,res,next){
     })
 
 }
-
-
-app.post('/login',(req,res)=>{
-    ///Authorization
-    //Authentication
-    // {username :"test"}
-    const data = req.body;
-    const AccessToken=jwt.sign(data,process.env.ACCESS_TOKEN_SECREET,{expiresIn:'30s'});
-    res.json({AccessToken})
-})
 
 app.get('/books',AuthenToken,(req,res)=>{
     res.json({status:'Sucess',data : book} )
